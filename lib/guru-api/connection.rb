@@ -6,6 +6,8 @@ module GuruAPI
   # a simple Guru API client
   class Connection
 
+    include GuruAPI::Configuration
+
     API_VERSION = 'v1'
 
     def initialize(user = nil, pass = nil, endpoint = nil)

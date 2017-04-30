@@ -4,8 +4,15 @@ Ruby client to consume Guru API
 ## Usage
 ```ruby
 require 'guru-api'
-
 include GuruAPI::Resource
+
+GuruAPI.configure do |config|
+  config.endpoint     = 'https://api.getguru.com/api'
+  config.api_version  = 'v1'
+  config.user         = ENV['guru-user']
+  config.pass         = ENV['guru-pass']
+  config.ssl_verify   = false
+end
 
 # Fetch by id
 Cards.fetch('60921ce6-0c7f-4ff2-83b6-18192284d529')
