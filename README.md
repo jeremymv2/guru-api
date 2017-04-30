@@ -1,5 +1,5 @@
 # guru-api
-Ruby client to consume Guru API
+Ruby client to consume [GetGuru API](https://help.getguru.com/categories/api-documentation)
 
 ## Usage
 ```ruby

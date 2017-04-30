@@ -8,6 +8,7 @@ include Logify
 # do not inflate JSON objects
 JSON.create_id = nil
 
+# GuruAPI
 module GuruAPI
   autoload :Configuration,  'guru-api/configuration'
   autoload :Resource,       'guru-api/resource'
@@ -17,11 +18,7 @@ module GuruAPI
 
   class << self
     def connection
-      unless @connection
-        @connection = GuruAPI::Connection.new
-      end
-
-      @connection
+      @connection || GuruAPI::Connection.new
     end
 
     def method_missing(m, *args, &block)
@@ -32,7 +29,6 @@ module GuruAPI
       end
     end
 
-    #
     def respond_to_missing?(m, include_private = false)
       connection.respond_to?(m) || super
     end

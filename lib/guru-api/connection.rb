@@ -5,34 +5,37 @@ require 'uri'
 module GuruAPI
   # a simple Guru API client
   class Connection
-
     include GuruAPI::Configuration
 
-    API_VERSION = 'v1'
+    def initialize
+      GuruAPI::Configuration.keys.each do |key|
+        value = if options[key].nil?
+                  GuruAPI.instance_variable_get(:"@#{key}")
+                else
+                  options[key]
+                end
 
-    def initialize(user = nil, pass = nil, endpoint = nil)
-      @user = user || ENV['guru-user']
-      @pass = pass || ENV['guru-token']
-      @endpoint = endpoint || 'https://api.getguru.com'
+        instance_variable_set(:"@#{key}", value)
+      end
+
+      yield self if block_given?
     end
 
-    def get(path, params = {}, request_options = {})
+    def get(path, params = {})
       request(:get, path, params)
     end
 
     def connect
       uri = URI.parse(@endpoint)
       session = Net::HTTP.new(uri.host, uri.port)
-      if 'https' == uri.scheme
-        session.use_ssl = true
-      end
+      session.use_ssl = true if uri.scheme == 'https'
       session.start do |conn|
         yield(conn)
       end
     end
 
-    def request(method, path, params = {})
-      log.info  "#{method.to_s.upcase} #{path}..."
+    def request(method, path)
+      log.info "#{method.to_s.upcase} #{path}..."
       puts "#{method.to_s.upcase} #{path}..."
       resp_obj = nil
       connect do |conn|

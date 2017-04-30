@@ -8,7 +8,7 @@ module GuruAPI
           :api_version,
           :user,
           :pass,
-          :ssl_verify,
+          :ssl_verify
         ]
       end
     end
@@ -27,7 +27,7 @@ module GuruAPI
       end
       self
     end
-    alias_method :setup, :reset!
+    alias setup reset!
 
     private
 
