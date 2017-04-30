@@ -1,0 +1,47 @@
+module GuruAPI
+  # a simple Guru API client
+  class Connection
+    API_VERSION = 'v1'
+
+    def initialize(user, pass, endpoint = nil)
+      @user = user
+      @pass = pass
+      @endpoint = endpoint || 'https://api.getguru.com'
+    end
+
+    def get(id)
+      request(Net::HTTP::Get, "/api/#{API_VERSION}/cards/#{id}/extended")
+    end
+
+    def list(query)
+      request(Net::HTTP::Get, "/api/#{API_VERSION}/search/query?q=#{URI.encode(query)}")
+    end
+
+    def connect
+      uri = URI.parse(@endpoint)
+      session = Net::HTTP.new(uri.host, uri.port)
+      if 'https' == uri.scheme
+        session.use_ssl = true
+      end
+      session.start do |conn|
+        yield(conn)
+      end
+    end
+
+    def request(method, url, params = {})
+      resp_obj = nil
+      connect do |conn|
+        req = method.new(url)
+        req.basic_auth(@user, @pass)
+        # req.set_form_data query
+        resp = conn.request(req)
+        begin
+          resp_obj = JSON.parse(resp.body)
+        rescue => ex
+          raise "Invalid JSON Response: #{ex}"
+        end
+      end
+      resp_obj
+    end
+  end
+end
