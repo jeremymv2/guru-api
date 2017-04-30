@@ -9,8 +9,8 @@ module GuruAPI
     API_VERSION = 'v1'
 
     def initialize(user = nil, pass = nil, endpoint = nil)
-      @user = user || 'jmiller@chef.io'
-      @pass = pass || 'b49439cb-2c38-496a-bc8b-377e58ffe819'
+      @user = user || ENV['guru-user']
+      @pass = pass || ENV['guru-token']
       @endpoint = endpoint || 'https://api.getguru.com'
     end
 
